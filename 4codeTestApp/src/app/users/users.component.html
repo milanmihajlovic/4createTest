@@ -1,0 +1,28 @@
+<div *ngIf="!renderUsersList || usersList.length == 0 else userTable">
+  Loading...
+</div>
+
+<ng-template #userTable>
+<table *ngIf="usersList.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>NAME</th>
+      <th>ACTIVE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of usersList">
+      <td>{{user.id}}</td>
+      <td>{{user.userName}}</td>
+      <td>
+        <button (click)="toggleActive(user)" [disabled]="updatingUsersList">
+          <span *ngIf="user.active">Deactivate</span>
+          <span *ngIf="!user.active">Activate</span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<button [disabled]="addUserDisabled || updatingUsersList">Add User</button>
+</ng-template>
