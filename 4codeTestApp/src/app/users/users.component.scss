@@ -1,0 +1,25 @@
+.w7 {
+  width: 7em;
+}
+.tc {
+  text-align: center;
+}
+.tl {
+  text-align: left;
+}
+.mb1 {
+  margin-bottom: 1em;
+}
+
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 0.2em 0.5em;
+}
+tr:hover {
+  td {
+    background-color: #ccc;
+  }
+}

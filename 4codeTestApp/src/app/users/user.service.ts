@@ -45,32 +45,46 @@ export class UserService {
   public usersListObservable: BehaviorSubject<any> = new BehaviorSubject([]);
 
   getUsers(): Promise<User[]> {
-    return new Promise(() =>
+    return new Promise((resolve) =>
       setTimeout(() => {
         this.usersListObservable.next(usersList);
-      }, environment.severEmulation)
+        resolve(usersList);
+      }, environment.serverEmulation)
     );
   }
 
-  updateUser(editedUser: User): Promise<User[]> {
+  insertUpdateUser(editedUser: User): Promise<User[]> {
+    let userUpdated = false;
     usersList.map((user) => {
       if (user.id === editedUser.id) {
         user.active = editedUser.active;
         user.userName = editedUser.userName;
+        userUpdated = true;
       }
     });
+    if (!userUpdated) {
+      let newUser: User = {
+        id: editedUser.id,
+        userName: editedUser.userName,
+        active: editedUser.active,
+      };
+      usersList.push(newUser);
+    }
     return this.getUsers();
   }
 
   checkUserNameForUniqueness(user_name: string): Promise<boolean> {
-    return new Promise(() =>
+    return new Promise((resolve) =>
       setTimeout(() => {
-        let matching_result =
-          usersList.filter((user) => user.userName === user_name).length > 0
-            ? false
-            : true;
-        return matching_result;
-      }, environment.severEmulation)
+        const isUnique = !usersList.some((user) => user.userName === user_name);
+        resolve(isUnique);
+      }, environment.serverEmulation)
     );
+  }
+
+  deleteUser(deletingUser: User): Promise<User[]> {
+    let newUsersList = usersList.filter((user) => user.id != deletingUser.id);
+    usersList = newUsersList;
+    return this.getUsers();
   }
 }

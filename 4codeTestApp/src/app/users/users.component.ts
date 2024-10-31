@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User, UserService } from './user.service';
+import { ModalComponent } from '../modal/modal.component';
+import { UserformComponent } from '../userform/userform.component';
 import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ModalComponent, UserformComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -16,6 +18,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   renderUsersList = false;
   updatingUsersList = false;
   addUserDisabled = true;
+
+  isModalOpen = false;
+
+  modalComponentType = UserformComponent;
+
+  selectedUser: User | null = null;
 
   constructor(private userService: UserService) {}
 
@@ -49,7 +57,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     let updatedUser = { ...user };
     updatedUser.active = !updatedUser.active;
     this.updatingUsersList = true;
-    this.userService.updateUser(updatedUser);
+    this.userService.insertUpdateUser(updatedUser);
   }
 
   allUsersAreActive() {
@@ -57,5 +65,21 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.usersList.length ===
       this.usersList.filter((user) => user.active).length
     );
+  }
+
+  deleteUser(user: User) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(user);
+    }
+  }
+
+  openModalWithUser(user: any) {
+    this.selectedUser = user;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.selectedUser = null;
   }
 }
