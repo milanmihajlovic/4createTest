@@ -4,26 +4,39 @@
 </div>
 
 <ng-template #userTable>
-<table *ngIf="usersList.length > 0">
+<table *ngIf="usersList.length > 0" class="mb1">
   <thead>
     <tr>
       <th>ID</th>
-      <th>NAME</th>
-      <th>ACTIVE</th>
+      <th class="w7 tl">NAME</th>
+      <th class="w7 tc">ACTIVE</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let user of usersList">
       <td>{{user.id}}</td>
       <td>{{user.userName}}</td>
-      <td>
+      <td class="tc">
         <button (click)="toggleActive(user)" [disabled]="updatingUsersList">
           <span *ngIf="user.active">Deactivate</span>
           <span *ngIf="!user.active">Activate</span>
         </button>
       </td>
+      <td>
+        <button (click)="selectedUser=user; openModalWithUser(selectedUser)" [disabled]="updatingUsersList">
+          Edit
+        </button>
+        <button (click)="deleteUser(user)" [disabled]="updatingUsersList">
+          Delete
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
-<button [disabled]="addUserDisabled || updatingUsersList">Add User</button>
+<button [disabled]="addUserDisabled || updatingUsersList" (click)="selectedUser=null; openModalWithUser(selectedUser)">Add User</button>
 </ng-template>
+
+<app-modal [isOpen]="isModalOpen" [componentType]="modalComponentType" [componentData]="selectedUser"
+  (close)="closeModal()">
+</app-modal>

@@ -1,0 +1,29 @@
+<form [formGroup]="userForm" (submit)="userFormSubmitted()">
+  <input type="hidden" formControlName="id" name="id" />
+  <div class="field-container" [class]="userForm.get('userName')?.invalid && (userForm.get('userName')?.touched || userForm.get('userName')?.dirty) ? 'error': ''">
+    <label for="userName">User name</label>
+    <input type="text" formControlName="userName" minlength="3" id="userName" />
+    <div
+      *ngIf="userForm.get('userName')?.invalid && (userForm.get('userName')?.touched || userForm.get('userName')?.dirty)" class="error">
+      <div *ngIf="userForm.get('userName')?.errors?.['required']">
+        User name is required.
+      </div>
+      <div *ngIf="userForm.get('userName')?.errors?.['minlength']">
+        User name must be at least 3 characters long.
+      </div>
+      <div *ngIf="userForm.get('userName')?.errors?.['userNameTaken']">
+        User name already exists.
+      </div>
+    </div>
+  </div>
+  <div class="field-container">
+    <label for="active">Active</label>
+    <input type="checkbox" formControlName="active" id="active"/>
+  </div>
+  <div class="field-container">
+    <button [disabled]="!userForm.valid || disableFormSubmit">
+      <span *ngIf="!componentData?.userName">Insert</span>
+      <span *ngIf="componentData?.userName">Edit</span>
+    </button>
+  </div>
+</form>

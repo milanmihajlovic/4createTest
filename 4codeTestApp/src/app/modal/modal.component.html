@@ -1,0 +1,11 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Modal Title</h3>
+      <button (click)="onClose()" class="closeButton">X</button>
+    </div>
+    <div class="modal-body">
+      <ng-template #modalBody></ng-template> <!-- proverite da li ovaj selektor koristi ViewContainerRef -->
+    </div>
+  </div>
+</div>
