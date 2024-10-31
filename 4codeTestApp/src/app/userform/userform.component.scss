@@ -1,5 +1,11 @@
 .field-container {
   margin-bottom: 1em;
+  position: relative;
+  &.contains-preloader {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 }
 .error {
   color: red;
@@ -9,4 +15,11 @@
 }
 label {
   margin-right: 1em;
+}
+.preloader {
+  position: absolute;
+  z-index: 1;
+  width: 2em;
+  top: 0;
+  right: 0;
 }

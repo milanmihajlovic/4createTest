@@ -35,6 +35,7 @@ export class UserformComponent implements OnInit, OnDestroy {
   usersListObservable: any;
   disableFormSubmit = false;
   disableFormFields = false;
+  showPreloader = false;
 
   @Output() closeModal = new EventEmitter<void>();
 
@@ -85,15 +86,23 @@ export class UserformComponent implements OnInit, OnDestroy {
 
   checkUserNameUnique(existingUserName: string | null): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      this.disableFormSubmit = true;
+      this.showPreloader = true;
       if (existingUserName && control.value === existingUserName) {
+        this.disableFormSubmit = false;
+        this.showPreloader = false;
         return of(null);
       }
 
       if (!control.value) {
+        this.disableFormSubmit = false;
+        this.showPreloader = false;
         return of(null);
       }
 
       if (!this.shouldValidateUserName) {
+        this.disableFormSubmit = false;
+        this.showPreloader = false;
         return of(null);
       }
 
@@ -107,7 +116,8 @@ export class UserformComponent implements OnInit, OnDestroy {
         map((isUnique) => {
           control.enable();
           this.shouldValidateUserName = true;
-
+          this.disableFormSubmit = false;
+          this.showPreloader = false;
           if (isUnique) {
             return null;
           } else {
@@ -117,7 +127,9 @@ export class UserformComponent implements OnInit, OnDestroy {
         }),
         catchError(() => {
           control.enable();
+          this.disableFormSubmit = false;
           this.shouldValidateUserName = true;
+          this.showPreloader = false;
           return of(null);
         })
       );
