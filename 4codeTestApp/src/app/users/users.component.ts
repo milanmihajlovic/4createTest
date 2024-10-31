@@ -69,7 +69,16 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   deleteUser(user: User) {
     if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(user);
+      this.updatingUsersList = true;
+      this.userService
+        .deleteUser(user)
+        .then(() => {
+          this.updatingUsersList = false;
+        })
+        .catch((err) => {
+          console.error(err);
+          this.updatingUsersList = false;
+        });
     }
   }
 

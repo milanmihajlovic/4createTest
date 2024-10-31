@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, firstValueFrom } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 let usersList = [
   {
@@ -44,13 +45,13 @@ export class UserService {
 
   public usersListObservable: BehaviorSubject<any> = new BehaviorSubject([]);
 
-  getUsers(): Promise<User[]> {
-    return new Promise((resolve) =>
-      setTimeout(() => {
-        this.usersListObservable.next(usersList);
-        resolve(usersList);
-      }, environment.serverEmulation)
+  async getUsers(): Promise<User[]> {
+    const users = await firstValueFrom(
+      of(usersList).pipe(delay(environment.serverEmulation))
     );
+
+    this.usersListObservable.next(users);
+    return users;
   }
 
   insertUpdateUser(editedUser: User): Promise<User[]> {
@@ -73,13 +74,10 @@ export class UserService {
     return this.getUsers();
   }
 
-  checkUserNameForUniqueness(user_name: string): Promise<boolean> {
-    return new Promise((resolve) =>
-      setTimeout(() => {
-        const isUnique = !usersList.some((user) => user.userName === user_name);
-        resolve(isUnique);
-      }, environment.serverEmulation)
-    );
+  async checkUserNameForUniqueness(user_name: string): Promise<boolean> {
+    const isUnique = !usersList.some((user) => user.userName === user_name);
+    await firstValueFrom(of(isUnique).pipe(delay(environment.serverEmulation)));
+    return isUnique;
   }
 
   deleteUser(deletingUser: User): Promise<User[]> {
