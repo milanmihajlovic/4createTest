@@ -138,6 +138,7 @@ export class UserformComponent implements OnInit, OnDestroy {
 
   userFormSubmitted() {
     this.disableFormSubmit = true;
+    this.disableFormFields = true;
     if (this.userForm.valid) {
       this.userService.insertUpdateUser(this.userForm.value).then(() => {
         this.closeModal.emit();
